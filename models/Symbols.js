@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const upsertMany = require('@meanie/mongoose-upsert-many');
+mongoose.plugin(upsertMany)
 const Schema = mongoose.Schema;
 
 const symbolSchema = new Schema({
@@ -15,7 +17,14 @@ const symbolSchema = new Schema({
     isEnabled :Boolean,
     figi: String,
     cik :String,
-    lei :String
-}, {collection: 'symbols'});
-
+    lei :String,
+    isUpdated : {type: Boolean, default: false}
+}, {collection: 'symbols'},{
+    upsertMany: {
+        matchFields: ['field1','field2'],
+        type: 'replaceOne',
+        ensureModel: true
+    }
+});
+symbolSchema.plugin(upsertMany)
 module.exports = mongoose.model('symbols', symbolSchema);

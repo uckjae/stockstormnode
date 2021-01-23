@@ -17,7 +17,7 @@ require('dotenv').config();
 //connect to mongodb
 const mongoose = require('mongoose');
 const wocUri = process.env.WOCURI;
-const symbols = require('./models/symbols');
+const symbols = require('./models/Symbols');
 
 mongoose.connect(wocUri, {useNewUrlParser: true, useUnifiedTopology: true}, function () {
   const conn = mongoose.connection;
@@ -44,7 +44,7 @@ async function updateScheduler() {
   console.log('scheduler init()')
   return new Promise(function (resolve, reject) {
     schedule.scheduleJob(updateRule, async () => {
-      const updateSymbols = await require('./modules/updateSymbols').updateSymbols();
+      const updateSymbols = await require('./modules/UpdateSymbols').updateSymbols();
       if (updateSymbols == true) {
         resolve(true)
       } else {
@@ -79,6 +79,11 @@ app.use('/users', usersRouter);
 app.use(function (req, res, next) {
   next(createError(404));
 });
+
+//test
+const updateSymbols = require('./modules/UpdateSymbols');
+updateSymbols.updateSymbols();
+
 
 // error handler
 app.use(function (err, req, res, next) {
